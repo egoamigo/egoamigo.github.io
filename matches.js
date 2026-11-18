@@ -151,8 +151,26 @@
     show();
   });});
   more.addEventListener("click",function(){ open=true; show(); });
+  /* スプシの「お知らせ・活動」のタブ（インスタに出さないお知らせ） */
+  function fromSheet(rs){
+    var out=[], y=new Date().getFullYear();
+    rs.forEach(function(r){
+      if(/×|x|X|✕/.test(r["のせる"]||"") || !r["タイトル"]) return;
+      var t=(r["日付"]||"").replace(/[年月]/g,"/").replace(/日/,""), m=t.match(/^(?:(\d{4})[\/\-.])?(\d{1,2})[\/\-.](\d{1,2})/), day="", label="";
+      if(m) day=(m[1]||y)+"-"+String(m[2]).padStart(2,"0")+"-"+String(m[3]).padStart(2,"0");
+      else label=r["日付"]||"NEW";
+      var k=r["種類"]||"お知らせ"; if(k==="結果") k="大会";
+      out.push({date:day,dateLabel:label,type:k,title:r["タイトル"],opponents:[],cats:[],result:"",score:"",note:r["ひとこと"]||"",link:r["リンク"]||""});
+    });
+    return out;
+  }
   fetch("matches.json",{cache:"no-cache"}).then(function(r){return r.json()}).then(function(d){
     all=d.matches||[]; draw(all.slice());
+    if(window.EgoSheet) window.EgoSheet.get("お知らせ・活動").then(function(rs){
+      /* スプシが読めたら、ページに書いてある手書きのお知らせはスプシの方を使う */
+      all=all.filter(function(m){ return /instagram\.com/.test(m.link||""); }).concat(fromSheet(rs));
+      draw(all.slice());
+    }).catch(function(){});
     if(!FEED_URL) return;
     return fetch(FEED_URL).then(function(r){return r.json()}).then(function(f){
       var posts=Array.isArray(f)?f:(f.posts||[]);
