@@ -206,6 +206,33 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .gallery-h{font-size:14px;font-weight:700;color:var(--mute);margin:36px 0 12px;letter-spacing:.08em}
 @media (min-width:761px){.news-list a{grid-template-columns:120px 1fr;gap:22px}.news-list img{width:120px;height:120px}}
 
+/* ===== 試合・トレマの記録 ===== */
+.rec-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px 16px;flex-wrap:wrap;margin:0 0 12px}
+.rec-head h3{margin:0;font-size:20px;font-weight:900}
+.rec-sum{margin:0;font-size:14px;font-weight:700;color:var(--gold)}
+.rec{list-style:none;margin:0 0 8px;padding:0;display:grid;gap:10px}
+.rec-item a{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:14px 16px;background:var(--panel);border:1px solid rgba(169,163,154,.22);border-left:4px solid var(--mute);border-radius:6px;text-decoration:none;color:inherit;transition:border-color .2s}
+.rec-item a:hover{border-color:var(--gold)}
+.rec-item.cup a{border-left-color:var(--gold);background:linear-gradient(120deg,rgba(214,173,79,.16),var(--panel) 55%)}
+.rec-date{display:flex;flex-direction:column;align-items:center;line-height:1.1}
+.rec-date .md{font-family:var(--f-display);font-weight:800;font-size:24px;letter-spacing:.02em}
+.rec-date .wd{font-size:12px;color:var(--mute);margin-top:4px}
+.rec-date .wd::before{content:"(";}.rec-date .wd::after{content:")";}
+.rec-top{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:4px}
+.rec-type{font-size:11px;font-weight:900;padding:2px 8px;border-radius:3px;background:var(--wine);color:var(--chalk)}
+.rec-item.cup .rec-type{background:var(--gold);color:var(--night)}
+.rec-cat{font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;border:1px solid rgba(169,163,154,.45);color:var(--chalk)}
+.rec-vs{font-weight:900;font-size:17px;line-height:1.45}
+.rec-vs .v{font-family:var(--f-display);font-weight:800;font-size:13px;color:var(--gold);margin-right:8px;letter-spacing:.06em}
+.rec-note{font-size:13px;color:var(--mute);line-height:1.6;margin-top:4px}
+.rec-res{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.rec-win{font-weight:900;font-size:13px;color:var(--gold);white-space:nowrap}
+.rec-res .score{font-family:var(--f-display);font-weight:800;font-size:22px}
+.rec-res:empty::after{content:"›";font-size:22px;color:var(--mute)}
+.rec-more{margin:4px 0 0}
+.rec-foot{font-size:12px;color:var(--mute);margin:10px 0 40px}
+@media (max-width:520px){.rec-item a{grid-template-columns:52px 1fr auto;gap:10px;padding:12px}.rec-date .md{font-size:20px}.rec-vs{font-size:16px}}
+
 /* ===== form ===== */
 .contact{background:radial-gradient(ellipse at 85% 0%,rgba(142,31,61,.35),transparent 60%),var(--night)}
 .contact .grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(28px,5vw,64px);align-items:start}
@@ -423,6 +450,13 @@ footer b{font-family:var(--f-display);font-weight:900;letter-spacing:.1em;color:
       <h2 id="ig-h">最新の活動</h2>
       <span class="handle">@egoamigo2026</span>
     </div>
+    <div class="rec-head">
+      <h3><span class="p">試合・</span><span class="p">トレマの記録</span></h3>
+      <p class="rec-sum" id="rec-sum"></p>
+    </div>
+    <ol class="rec" id="rec"></ol>
+    <button type="button" class="btn ghost rec-more" id="rec-more" hidden>もっと見る</button>
+    <p class="rec-foot"><span class="p">インスタの投稿から</span><span class="p">自動で読み取っています。</span><span class="p">押すと投稿が開きます。</span></p>
     <div class="news-tabs" role="group" aria-label="しぼりこみ">
       <button type="button" data-f="all" aria-pressed="true">すべて</button>
       <button type="button" data-f="info" aria-pressed="false">お知らせ</button>
@@ -619,5 +653,6 @@ footer b{font-family:var(--f-display);font-weight:900;letter-spacing:.1em;color:
   }).catch(function(){ /* 読めないときは、上に書いてある分をそのまま出す */ });
 })();
 </script>
+<script src="matches.js"></script>
 </body>
 </html>
