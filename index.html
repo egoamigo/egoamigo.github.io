@@ -149,25 +149,16 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .places small{display:block;font-weight:500;font-size:13px;color:var(--mute)}
 
 /* ===== fee ===== */
-.plans{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,3vw,28px)}
-.plan{background:var(--panel);border:1px solid var(--gold-soft);border-radius:6px;padding:clamp(22px,3.5vw,32px)}
-.plan.team{border-color:var(--wine);background:linear-gradient(160deg,rgba(142,31,61,.28),var(--panel) 60%)}
-.plan .en{font-family:var(--f-display);font-weight:900;letter-spacing:.2em;color:var(--gold);font-size:15px}
-.plan h3{font-size:24px;font-weight:900;margin:2px 0 4px}
-.plan .for{color:var(--mute);font-size:14px;padding-bottom:14px;margin-bottom:10px;border-bottom:1px solid rgba(143,116,52,.45)}
-.price{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:6px 0}
-.price span{font-weight:700}
-.price b{font-family:var(--f-display);font-weight:900;font-size:clamp(36px,6vw,48px);line-height:1.1;letter-spacing:.02em}
-.price small{font-family:var(--f-body);font-size:14px;font-weight:700;margin-left:4px}
-.plan .pn{color:var(--mute);font-size:14px;margin-top:10px}
-.commons{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,3vw,28px);margin-top:clamp(16px,3vw,28px)}
-.commons div{border:1px solid rgba(169,163,154,.3);border-radius:6px;padding:16px 20px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
-.commons span{font-weight:700}
-.commons b{font-family:var(--f-display);font-weight:900;font-size:30px}
-.commons small{font-family:var(--f-body);font-size:13px;font-weight:700;margin-left:3px}
-.commons em{font-style:normal;color:var(--mute);font-size:13px;flex-basis:100%}
-.fee-note{color:var(--mute);font-size:14px;margin-top:18px}
-@media (max-width:760px){.plans,.commons{grid-template-columns:1fr}}
+.fee{padding-top:clamp(40px,6vw,64px);padding-bottom:clamp(40px,6vw,64px)}
+.fee-h{font-size:20px;margin:0 0 12px}
+.fee-list{margin:0;max-width:640px;border-top:1px solid rgba(169,163,154,.25)}
+.fee-list div{display:grid;grid-template-columns:8.5em 1fr;gap:4px 16px;padding:12px 0;border-bottom:1px solid rgba(169,163,154,.25);font-size:15px}
+.fee-list dt{font-weight:700;color:var(--chalk)}
+.fee-list dt small{display:block;font-weight:400;font-size:12px;color:var(--mute)}
+.fee-list dd{margin:0;color:var(--chalk)}
+.fee-list dd small{display:block;font-size:12px;color:var(--mute);margin-top:2px}
+.fee-note{color:var(--mute);font-size:13px;margin-top:12px}
+@media (max-width:520px){.fee-list div{grid-template-columns:1fr}}
 
 /* ===== level ===== */
 .level{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,56px);align-items:center}
@@ -209,7 +200,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 /* ===== 試合・トレマの記録 ===== */
 .rec-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px 16px;flex-wrap:wrap;margin:0 0 12px}
 .rec-head h3{margin:0;font-size:20px;font-weight:900}
-.rec-sum{margin:0;font-size:14px;font-weight:700;color:var(--gold)}
+.rec-sum{margin:-8px 0 14px;font-size:14px;font-weight:700;color:var(--gold)}
 .rec{list-style:none;margin:0 0 8px;padding:0;display:grid;gap:10px}
 .rec-item a{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:14px 16px;background:var(--panel);border:1px solid rgba(169,163,154,.22);border-left:4px solid var(--mute);border-radius:6px;text-decoration:none;color:inherit;transition:border-color .2s}
 .rec-item a:hover{border-color:var(--gold)}
@@ -230,6 +221,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .rec-res .score{font-family:var(--f-display);font-weight:800;font-size:22px}
 .rec-res:empty::after{content:"›";font-size:22px;color:var(--mute)}
 .rec-more{margin:4px 0 0}
+.rec-date .md.now{font-family:var(--f-body);font-size:13px;font-weight:900;color:var(--gold);text-align:center}
+.rec-item.k-info a{border-left-color:var(--wine)}
+.rec-item.k-info .rec-type{background:transparent;border:1px solid var(--wine);color:var(--chalk)}
+.rec-item.k-act .rec-type{background:var(--wine)}
 .rec-foot{font-size:12px;color:var(--mute);margin:10px 0 40px}
 @media (max-width:520px){.rec-item a{grid-template-columns:52px 1fr auto;gap:10px;padding:12px}.rec-date .md{font-size:20px}.rec-vs{font-size:16px}}
 
@@ -277,11 +272,10 @@ footer b{font-family:var(--f-display);font-weight:900;letter-spacing:.1em;color:
   <div class="wrap">
     <a class="brand" href="#top"><img src="img/logo.jpg" alt="EGO AMIGO のエンブレム"><span>EGO AMIGO</span></a>
     <nav class="nav" aria-label="ページ内リンク">
+      <a href="#instagram">最新の活動</a>
       <a href="#philosophy">大切にしていること</a>
       <a href="#training">トレーニング</a>
       <a href="#schedule">活動日・場所</a>
-      <a href="#fee">料金</a>
-      <a href="#instagram">活動の様子</a>
     </nav>
     <a class="btn sm" href="#apply">無料体験の申込み</a>
   </div>
@@ -313,6 +307,37 @@ footer b{font-family:var(--f-display);font-weight:900;letter-spacing:.1em;color:
       <p><span class="p">9月に本格始動した</span><span class="p">EGO AMIGO。</span><span class="p">まだ数ヶ月のチームが、</span><span class="p">初めてのタイトルを</span><span class="p">つかみました。</span><span class="p">大事な場面で</span><span class="p">PKを止め、</span><span class="p">最後は自ら</span><span class="p">決勝点を決めたキーパー。</span><span class="p">そして、仲間のために走り、</span><span class="p">最後まであきらめずに</span><span class="p">戦った全員でとった</span><span class="p">優勝です。</span></p>
       <p class="quote"><span class="p">育成も、勝負も、</span><span class="p">どちらも大切。</span><span class="p">満足せず、</span><span class="p">もっと細部に</span><span class="p">こだわっていきます。</span></p>
     </div>
+  </div>
+</section>
+
+<section class="band" id="instagram" aria-labelledby="ig-h">
+  <div class="wrap">
+    <p class="eyebrow">News &amp; Instagram</p>
+    <div class="ig-head">
+      <h2 id="ig-h">最新の活動</h2>
+      <span class="handle">@egoamigo2026</span>
+    </div>
+    <p class="rec-sum" id="rec-sum"></p>
+    <div class="news-tabs" role="group" aria-label="しぼりこみ">
+      <button type="button" data-f="all" aria-pressed="true">すべて</button>
+      <button type="button" data-f="info" aria-pressed="false">お知らせ</button>
+      <button type="button" data-f="result" aria-pressed="false">結果</button>
+      <button type="button" data-f="act" aria-pressed="false">活動</button>
+    </div>
+    <ol class="rec" id="rec"></ol>
+    <p class="news-empty" id="news-empty" hidden>この分類の投稿はまだありません。</p>
+    <button type="button" class="btn ghost rec-more" id="rec-more" hidden>もっと見る</button>
+    <p class="rec-foot"><span class="p">インスタの投稿から</span><span class="p">自動で読み取っています。</span><span class="p">押すと投稿が開きます。</span></p>
+    <p class="gallery-h" id="gallery-h">活動の様子</p>
+    <div class="feed" id="feed">
+      <a href="https://www.instagram.com/egoamigo2026/" target="_blank" rel="noopener"><img src="img/team.jpg" alt="優勝を喜ぶ選手たち"></a>
+      <a href="https://www.instagram.com/egoamigo2026/" target="_blank" rel="noopener"><img src="img/indoor.jpg" alt="CABOサッカースクールとのトレーニングマッチ"></a>
+      <a href="https://www.instagram.com/egoamigo2026/" target="_blank" rel="noopener"><img src="img/stairs.jpg" alt="走りに特化したトレーニング"></a>
+      <a href="https://www.instagram.com/egoamigo2026/" target="_blank" rel="noopener"><img src="img/night.jpg" alt="ナイターの練習"></a>
+      <a href="https://www.instagram.com/egoamigo2026/" target="_blank" rel="noopener"><img src="img/lineup.jpg" alt="トレーニングマッチ後の整列"></a>
+      <a href="https://www.instagram.com/egoamigo2026/" target="_blank" rel="noopener"><img src="img/uniform.jpg" alt="EGO AMIGOのユニフォーム"></a>
+    </div>
+    <div class="feed-more"><a class="btn ghost" href="https://www.instagram.com/egoamigo2026/" target="_blank" rel="noopener">Instagramでもっと見る</a></div>
   </div>
 </section>
 
@@ -401,34 +426,6 @@ footer b{font-family:var(--f-display);font-weight:900;letter-spacing:.1em;color:
   </div>
 </section>
 
-<section class="band" id="fee" aria-labelledby="fee-h">
-  <div class="wrap">
-    <p class="eyebrow">Fee</p>
-    <h2 id="fee-h">料金</h2>
-    <div class="plans">
-      <div class="plan">
-        <p class="en">SCHOOL</p>
-        <h3>スクール生</h3>
-        <p class="for"><span class="p">小学1〜6年生｜</span><span class="p">月・火</span></p>
-        <div class="price"><span>週1回</span><b>7,000<small>円／月</small></b></div>
-        <div class="price"><span>週2回</span><b>13,000<small>円／月</small></b></div>
-        <p class="pn"><span class="p">月曜・火曜の</span><span class="p">どちらか、</span><span class="p">または両方を</span><span class="p">えらべます。</span></p>
-      </div>
-      <div class="plan team">
-        <p class="en">TEAM</p>
-        <h3>チーム生</h3>
-        <p class="for"><span class="p">月・火・木・土・日</span></p>
-        <div class="price"><span>月謝</span><b>15,000<small>円／月</small></b></div>
-        <p class="pn"><span class="p">木曜の</span><span class="p">CORE FIELD様による</span><span class="p">フィジカルトレーニング</span><span class="p">（約8,000円分）も、</span><span class="p">この中に</span><span class="p">ふくまれています。</span></p>
-      </div>
-    </div>
-    <div class="commons">
-      <div><span>入会金</span><b>10,000<small>円</small></b><em>スクール・チーム共通。入団のときに1回だけ。</em></div>
-      <div><span>保険代</span><b>1,000<small>円／年</small></b><em>スクール・チーム共通。スポーツ保険の費用です。</em></div>
-    </div>
-    <p class="fee-note"><span class="p">ユニフォーム代・</span><span class="p">大会参加費などは</span><span class="p">別にかかります。</span></p>
-  </div>
-</section>
 
 <section class="band" aria-labelledby="lv-h">
   <div class="wrap level">
@@ -443,41 +440,17 @@ footer b{font-family:var(--f-display);font-weight:900;letter-spacing:.1em;color:
   </div>
 </section>
 
-<section class="band" id="instagram" aria-labelledby="ig-h">
+
+<section class="band fee" id="fee" aria-labelledby="fee-h">
   <div class="wrap">
-    <p class="eyebrow">News &amp; Instagram</p>
-    <div class="ig-head">
-      <h2 id="ig-h">最新の活動</h2>
-      <span class="handle">@egoamigo2026</span>
-    </div>
-    <div class="rec-head">
-      <h3><span class="p">試合・</span><span class="p">トレマの記録</span></h3>
-      <p class="rec-sum" id="rec-sum"></p>
-    </div>
-    <ol class="rec" id="rec"></ol>
-    <button type="button" class="btn ghost rec-more" id="rec-more" hidden>もっと見る</button>
-    <p class="rec-foot"><span class="p">インスタの投稿から</span><span class="p">自動で読み取っています。</span><span class="p">押すと投稿が開きます。</span></p>
-    <div class="news-tabs" role="group" aria-label="しぼりこみ">
-      <button type="button" data-f="all" aria-pressed="true">すべて</button>
-      <button type="button" data-f="info" aria-pressed="false">お知らせ</button>
-      <button type="button" data-f="result" aria-pressed="false">結果</button>
-      <button type="button" data-f="act" aria-pressed="false">活動</button>
-    </div>
-    <ul class="news-list" id="news-list">
-      <li data-k="result"><a href="https://www.instagram.com/egoamigo2026/" target="_blank" rel="noopener"><img src="img/trophy.jpg" alt=""><div><div class="news-meta"><time datetime="2026-11-15">2026.11.15</time><span class="ntag result">結果</span></div><div class="nt"><span class="p">スーペルゴラッソ杯</span> <span class="p">秋季大会で</span><span class="p">初優勝</span></div><div class="nx">9月に本格始動したチームが、初めてのタイトルをつかみました。</div></div></a></li>
-      <li data-k="info"><a href="#apply"><img src="img/huddle.jpg" alt=""><div><div class="news-meta"><time>募集中</time><span class="ntag info">お知らせ</span></div><div class="nt"><span class="p">スクール生・チーム生の</span><span class="p">無料体験を</span><span class="p">受け付けています</span></div><div class="nx">このページの申込みフォームからどうぞ。</div></div></a></li>
-    </ul>
-    <p class="news-empty" id="news-empty" hidden>この分類の投稿はまだありません。</p>
-    <p class="gallery-h" id="gallery-h">活動の様子</p>
-    <div class="feed" id="feed">
-      <a href="https://www.instagram.com/egoamigo2026/" target="_blank" rel="noopener"><img src="img/team.jpg" alt="優勝を喜ぶ選手たち"></a>
-      <a href="https://www.instagram.com/egoamigo2026/" target="_blank" rel="noopener"><img src="img/indoor.jpg" alt="CABOサッカースクールとのトレーニングマッチ"></a>
-      <a href="https://www.instagram.com/egoamigo2026/" target="_blank" rel="noopener"><img src="img/stairs.jpg" alt="走りに特化したトレーニング"></a>
-      <a href="https://www.instagram.com/egoamigo2026/" target="_blank" rel="noopener"><img src="img/night.jpg" alt="ナイターの練習"></a>
-      <a href="https://www.instagram.com/egoamigo2026/" target="_blank" rel="noopener"><img src="img/lineup.jpg" alt="トレーニングマッチ後の整列"></a>
-      <a href="https://www.instagram.com/egoamigo2026/" target="_blank" rel="noopener"><img src="img/uniform.jpg" alt="EGO AMIGOのユニフォーム"></a>
-    </div>
-    <div class="feed-more"><a class="btn ghost" href="https://www.instagram.com/egoamigo2026/" target="_blank" rel="noopener">Instagramでもっと見る</a></div>
+    <h2 id="fee-h" class="fee-h">料金</h2>
+    <dl class="fee-list">
+      <div><dt>スクール生<small>小学1〜6年生</small></dt><dd><span class="p">週1回 7,000円／月、</span><span class="p">週2回 13,000円／月</span></dd></div>
+      <div><dt>チーム生</dt><dd><span class="p">15,000円／月</span><small><span class="p">木曜の</span><span class="p">CORE FIELD様の</span><span class="p">フィジカルトレーニングも</span><span class="p">ふくみます。</span></small></dd></div>
+      <div><dt>入会金</dt><dd>10,000円<small>はじめに1回だけ</small></dd></div>
+      <div><dt>保険代</dt><dd>1,000円／年</dd></div>
+    </dl>
+    <p class="fee-note"><span class="p">ユニフォーム代・</span><span class="p">大会参加費などは</span><span class="p">別にかかります。</span><span class="p">くわしくは</span><span class="p">体験のときに</span><span class="p">お伝えします。</span></p>
   </div>
 </section>
 
@@ -584,73 +557,6 @@ footer b{font-family:var(--f-display);font-weight:900;letter-spacing:.1em;color:
     err.textContent = "";
     if(!ENDPOINT){ form.hidden = true; done.hidden = false; done.scrollIntoView({behavior:"smooth",block:"center"}); return; }
   });
-})();
-</script>
-<script>
-/* 最新の活動：インスタの投稿を読みこんで、お知らせ・結果・活動に分けて並べる。
-   FEED_URL に Behold（behold.so）の JSON フィードのURLを入れると動く。空のあいだは、上に書いてある分だけ出す。
-   分け方：投稿に「#お知らせ」「#結果」があればそれで決まる。なければ文の言葉から決める。 */
-(function(){
-  var FEED_URL = "";
-  var MAX = 8;
-  var list = document.getElementById("news-list");
-  var empty = document.getElementById("news-empty");
-  var tabs = document.querySelectorAll(".news-tabs button");
-  var cur = "all";
-  function apply(){
-    var n=0;
-    list.querySelectorAll("li").forEach(function(li){
-      var show = cur==="all" || li.dataset.k===cur;
-      li.hidden=!show; if(show) n++;
-    });
-    empty.hidden = n>0;
-  }
-  tabs.forEach(function(b){ b.addEventListener("click",function(){
-    cur=b.dataset.f; tabs.forEach(function(x){x.setAttribute("aria-pressed",x===b?"true":"false")}); apply();
-  });});
-  if(!FEED_URL) return;
-  function kind(t){
-    if(/#結果/.test(t)) return "result";
-    if(/#お知らせ/.test(t)) return "info";
-    if(/優勝|準優勝|[0-9０-９]+\s*[-－ー対]\s*[0-9０-９]+|結果|勝利|勝ち|大会|杯|カップ|リーグ/.test(t)) return "result";
-    if(/募集|お知らせ|体験会?|案内|日程|お休み|休み|開催|受付|申込|申し込/.test(t)) return "info";
-    return "act";
-  }
-  var LABEL={result:"結果",info:"お知らせ",act:"活動"};
-  function lines(t){ return t.split(/\n+/).map(function(x){return x.replace(/#\S+/g,"").trim()}).filter(Boolean); }
-  function cut(t,n){ t=Array.from(t); return t.length>n ? t.slice(0,n).join("")+"…" : t.join(""); }
-  function el(tag,cls,txt){ var e=document.createElement(tag); if(cls) e.className=cls; if(txt!=null) e.textContent=txt; return e; }
-  fetch(FEED_URL).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(d){
-    var posts = Array.isArray(d) ? d : (d.posts||[]);
-    if(!posts.length) return;
-    list.textContent="";
-    var imgs=[];
-    posts.slice(0,MAX).forEach(function(p){
-      var cap=p.caption||"", ls=lines(cap), k=kind(cap);
-      var src=(p.sizes&&p.sizes.medium&&p.sizes.medium.mediaUrl)||p.thumbnailUrl||p.mediaUrl;
-      var dt=new Date(p.timestamp);
-      var li=el("li"); li.dataset.k=k;
-      var a=el("a"); a.href=p.permalink; a.target="_blank"; a.rel="noopener";
-      var im=el("img"); im.src=src; im.alt=""; im.loading="lazy";
-      var box=el("div"), meta=el("div","news-meta");
-      var tm=el("time",null,dt.getFullYear()+"."+String(dt.getMonth()+1).padStart(2,"0")+"."+String(dt.getDate()).padStart(2,"0"));
-      tm.dateTime=p.timestamp;
-      meta.appendChild(tm); meta.appendChild(el("span","ntag "+k,LABEL[k]));
-      box.appendChild(meta);
-      box.appendChild(el("div","nt",cut(ls[0]||"Instagramの投稿",40)));
-      if(ls.length>1) box.appendChild(el("div","nx",ls.slice(1).join(" ")));
-      a.appendChild(im); a.appendChild(box); li.appendChild(a); list.appendChild(li);
-      imgs.push({src:src,href:p.permalink});
-    });
-    var g=document.getElementById("feed"); g.textContent="";
-    posts.slice(0,6).forEach(function(p){
-      var src=(p.sizes&&p.sizes.medium&&p.sizes.medium.mediaUrl)||p.thumbnailUrl||p.mediaUrl;
-      var a=el("a"); a.href=p.permalink; a.target="_blank"; a.rel="noopener";
-      var im=el("img"); im.src=src; im.alt=cut(lines(p.caption||"")[0]||"Instagramの投稿",40); im.loading="lazy";
-      a.appendChild(im); g.appendChild(a);
-    });
-    apply();
-  }).catch(function(){ /* 読めないときは、上に書いてある分をそのまま出す */ });
 })();
 </script>
 <script src="matches.js"></script>

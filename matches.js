@@ -73,69 +73,110 @@
   if(typeof module!=="undefined") module.exports = root.EgoMatches;
 })(typeof window!=="undefined" ? window : globalThis);
 
-/* ページに並べる */
+/* ページに並べる（すべて／お知らせ／結果／活動 のタブで分ける） */
 (function(){
   if(typeof document==="undefined") return;
   var FEED_URL = "";   /* Behold のフィードのURL（チームのインスタをつないだら入れる） */
   var SHOW = 5;
   var box=document.getElementById("rec"); if(!box) return;
   var sum=document.getElementById("rec-sum"), more=document.getElementById("rec-more");
+  var empty=document.getElementById("news-empty");
+  var tabs=document.querySelectorAll(".news-tabs button");
+  var cur="all", open=false, all=[];
   var W="日月火水木金土";
+  var KIND={"大会":"result","トレマ":"act","平日トレマ":"act","活動":"act","お知らせ":"info"};
   function el(t,c,x){ var e=document.createElement(t); if(c) e.className=c; if(x!=null) e.textContent=x; return e; }
-  function draw(items){
-    items.sort(function(a,b){ return a.date<b.date?1:a.date>b.date?-1:0; });
-    box.textContent="";
-    items.forEach(function(m,i){
-      var d=new Date(m.date+"T00:00:00+09:00");
-      var li=el("li", "rec-item"+(m.type==="大会"?" cup":"")); if(i>=SHOW) li.hidden=true;
-      var a=el("a"); a.href=m.link||"https://www.instagram.com/egoamigo2026/"; a.target="_blank"; a.rel="noopener";
-      var dt=el("time","rec-date"); dt.dateTime=m.date;
+  function cut(t,n){ t=Array.from(t); return t.length>n ? t.slice(0,n).join("")+"…" : t.join(""); }
+  /* 試合でない投稿：お知らせか活動にする */
+  function post(cap,day,link){
+    var ls=cap.split(/\n/).map(function(x){return x.replace(/#\S+/g,"").trim()}).filter(Boolean);
+    if(!ls.length) return null;
+    var info=/#お知らせ/.test(cap) || /募集|お知らせ|体験会?|案内|日程|お休み|休み|開催|受付|申込|申し込/.test(ls.slice(0,3).join(""));
+    return {date:day,type:info?"お知らせ":"活動",title:cut(ls[0].replace(/^[^\p{L}\p{N}]+/u,""),40),opponents:[],cats:[],result:"",score:"",note:ls[1]?cut(ls[1],44):"",link:link};
+  }
+  function card(m){
+    var k=KIND[m.type]||"act";
+    var li=el("li","rec-item k-"+k+(m.type==="大会"?" cup":"")); li.dataset.k=k;
+    var a=el("a"); a.href=m.link||"https://www.instagram.com/egoamigo2026/";
+    if(/^https?:/.test(a.getAttribute("href"))){ a.target="_blank"; a.rel="noopener"; }
+    var dt=el("time","rec-date");
+    if(m.date){
+      var d=new Date(m.date+"T00:00:00+09:00"); dt.dateTime=m.date;
       dt.appendChild(el("span","md",(d.getMonth()+1)+"."+String(d.getDate()).padStart(2,"0")));
       dt.appendChild(el("span","wd",W[d.getDay()]));
-      var body=el("div","rec-body");
-      var top=el("div","rec-top");
-      top.appendChild(el("span","rec-type",m.type));
-      if(m.result){ top.appendChild(el("span","rec-win",(m.result.indexOf("優勝")>=0?"🏆 ":"")+m.result)); }
-      (m.cats||[]).forEach(function(c){ top.appendChild(el("span","rec-cat",c)); });
-      body.appendChild(top);
-      var vs=el("div","rec-vs");
-      if(m.type==="大会"){ vs.textContent=m.title; }
-      else { vs.appendChild(el("span","v","vs")); vs.appendChild(document.createTextNode(m.opponents.join("・"))); }
-      body.appendChild(vs);
-      if(m.note) body.appendChild(el("div","rec-note",m.note));
-      var r=el("div","rec-res");
-      if(m.score){ r.appendChild(el("span","score",m.score)); }
-      a.appendChild(dt); a.appendChild(body); a.appendChild(r);
-      li.appendChild(a); box.appendChild(li);
-    });
-    if(sum){
-      var now=items.length?items[0].date.slice(0,7):"";
-      var mon=items.filter(function(m){return m.date.slice(0,7)===now});
-      var tm=mon.filter(function(m){return m.type!=="大会"}).length, cup=mon.length-tm;
-      var wins=mon.filter(function(m){return /優勝/.test(m.result)}).length;
-      sum.textContent = now ? (parseInt(now.slice(5))+"月は トレマ "+tm+"試合"+(cup?"・大会 "+cup+"回":"")+(wins?"（優勝 "+wins+"回）":"")) : "";
-    }
-    if(more){
-      more.hidden = items.length<=SHOW;
-      more.onclick=function(){ box.querySelectorAll("li[hidden]").forEach(function(li){li.hidden=false}); more.hidden=true; };
-    }
+    } else { dt.appendChild(el("span","md now",m.dateLabel||"NEW")); }
+    var body=el("div","rec-body"), top=el("div","rec-top");
+    top.appendChild(el("span","rec-type",m.type));
+    if(m.result) top.appendChild(el("span","rec-win",(m.result.indexOf("優勝")>=0?"🏆 ":"")+m.result));
+    (m.cats||[]).forEach(function(c){ top.appendChild(el("span","rec-cat",c)); });
+    body.appendChild(top);
+    var vs=el("div","rec-vs");
+    if(m.opponents && m.opponents.length && m.type!=="大会"){ vs.appendChild(el("span","v","vs")); vs.appendChild(document.createTextNode(m.opponents.join("・"))); }
+    else vs.textContent=m.title;
+    body.appendChild(vs);
+    if(m.note) body.appendChild(el("div","rec-note",m.note));
+    var r=el("div","rec-res"); if(m.score) r.appendChild(el("span","score",m.score));
+    a.appendChild(dt); a.appendChild(body); a.appendChild(r); li.appendChild(a);
+    return li;
   }
-  var base=[];
+  function show(){
+    var n=0;
+    box.querySelectorAll("li").forEach(function(li){
+      var hit = cur==="all" || li.dataset.k===cur;
+      li.hidden = !hit || (!open && n>=SHOW);
+      if(hit) n++;
+    });
+    empty.hidden = n>0;
+    more.hidden = open || n<=SHOW;
+  }
+  function draw(items){
+    items.sort(function(a,b){
+      if(!a.date) return -1; if(!b.date) return 1;
+      return a.date<b.date?1:a.date>b.date?-1:0;
+    });
+    box.textContent="";
+    items.forEach(function(m){ box.appendChild(card(m)); });
+    var dated=items.filter(function(m){return m.date});
+    var now=dated.length?dated[0].date.slice(0,7):"";
+    var mon=dated.filter(function(m){return m.date.slice(0,7)===now});
+    var tm=mon.filter(function(m){return /トレマ/.test(m.type)}).length;
+    var cup=mon.filter(function(m){return m.type==="大会"}).length;
+    var wins=mon.filter(function(m){return /優勝/.test(m.result)}).length;
+    sum.textContent = (tm||cup) ? (parseInt(now.slice(5))+"月は トレマ "+tm+"試合"+(cup?"・大会 "+cup+"回":"")+(wins?"（優勝 "+wins+"回）":"")) : "";
+    show();
+  }
+  tabs.forEach(function(b){ b.addEventListener("click",function(){
+    cur=b.dataset.f; open=false;
+    tabs.forEach(function(x){ x.setAttribute("aria-pressed",x===b?"true":"false"); });
+    show();
+  });});
+  more.addEventListener("click",function(){ open=true; show(); });
   fetch("matches.json",{cache:"no-cache"}).then(function(r){return r.json()}).then(function(d){
-    base=d.matches||[]; draw(base.slice());
+    all=d.matches||[]; draw(all.slice());
     if(!FEED_URL) return;
     return fetch(FEED_URL).then(function(r){return r.json()}).then(function(f){
       var posts=Array.isArray(f)?f:(f.posts||[]);
-      var have={}; base.forEach(function(m){ if(m.link) have[m.link.replace(/\/$/,"")]=1; });
+      var have={}; all.forEach(function(m){ if(m.link) have[m.link.replace(/\/$/,"").replace(/\/[^\/]+\/p\//,"/p/")]=1; });
       var add=[];
       posts.forEach(function(p){
-        var link=(p.permalink||"").replace(/\/$/,"");
+        var link=(p.permalink||"").replace(/\/$/,"").replace(/\/[^\/]+\/p\//,"/p/");
         if(have[link]) return;
         var day=new Date(new Date(p.timestamp).getTime()+9*3600e3).toISOString().slice(0,10);
-        var m=window.EgoMatches.parse(p.caption||"",day,p.permalink);
+        var m=window.EgoMatches.parse(p.caption||"",day,p.permalink) || post(p.caption||"",day,p.permalink);
         if(m) add.push(m);
       });
-      if(add.length) draw(base.concat(add));
+      if(add.length) draw(all.concat(add));
+      /* 活動の様子の写真も新しい投稿にする */
+      var g=document.getElementById("feed");
+      if(g && posts.length){
+        g.textContent="";
+        posts.slice(0,6).forEach(function(p){
+          var src=(p.sizes&&p.sizes.medium&&p.sizes.medium.mediaUrl)||p.thumbnailUrl||p.mediaUrl;
+          var a=el("a"); a.href=p.permalink; a.target="_blank"; a.rel="noopener";
+          var im=el("img"); im.src=src; im.alt=cut((p.caption||"").split("\n")[0]||"Instagramの投稿",40); im.loading="lazy";
+          a.appendChild(im); g.appendChild(a);
+        });
+      }
     });
   }).catch(function(){});
 })();
