@@ -209,7 +209,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .rec-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px 16px;flex-wrap:wrap;margin:0 0 12px}
 .rec-head h3{margin:0;font-size:20px;font-weight:900}
 .rec-sum{margin:-8px 0 14px;font-size:14px;font-weight:700;color:var(--gold)}
-.rec{list-style:none;margin:0 0 8px;padding:0;display:grid;gap:10px}
+.rec{list-style:none;margin:0 0 8px;padding:0;display:grid;gap:8px}
 .rec-item a{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:14px 16px;background:var(--panel);border:1px solid rgba(169,163,154,.22);border-left:4px solid var(--mute);border-radius:6px;text-decoration:none;color:inherit;transition:border-color .2s}
 .rec-item a:hover{border-color:var(--gold)}
 .rec-item.cup a{border-left-color:var(--gold);background:linear-gradient(120deg,rgba(214,173,79,.16),var(--panel) 55%)}
@@ -230,7 +230,15 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .rec-res:empty::after{content:"›";font-size:22px;color:var(--mute)}
 .rec-more{margin:4px 0 0}
 .rec-date .md.now{font-family:var(--f-body);font-size:13px;font-weight:900;color:var(--gold);text-align:center}
-.rec-item.k-info a{border-left-color:var(--wine)}
+.rec-item.k-info a{border-left-color:var(--wine);padding:20px 18px;background:linear-gradient(120deg,rgba(142,31,61,.30),var(--panel) 65%)}
+.rec-item.k-info .rec-vs{font-size:19px}
+.rec-item.k-info .rec-note{font-size:14px;color:var(--chalk)}
+.rec-item:not(.k-info) a{padding:10px 14px;gap:12px;grid-template-columns:54px 1fr auto}
+.rec-item:not(.k-info) .rec-date .md{font-size:19px}
+.rec-item:not(.k-info) .rec-vs{font-size:15px}
+.rec-item:not(.k-info) .rec-note{font-size:12px}
+.rec-item:not(.k-info) .rec-top{margin-bottom:2px;gap:4px}
+.rec-item:not(.k-info) .rec-type,.rec-item:not(.k-info) .rec-cat,.rec-item:not(.k-info) .rec-win{font-size:10px;padding:0 6px}
 .rec-item.k-info .rec-type{background:transparent;border:1px solid var(--wine);color:var(--chalk)}
 .rec-item.k-act .rec-type{background:var(--wine)}
 .rec-foot{font-size:12px;color:var(--mute);margin:10px 0 40px}
@@ -488,6 +496,7 @@ footer b{font-family:var(--f-display);font-weight:900;letter-spacing:.1em;color:
 
     <div>
       <form class="apply" id="apply-form" novalidate>
+        <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
         <div class="row2">
           <div class="field">
             <label for="f-child">お子さまのお名前<span class="req">必須</span></label>
@@ -544,6 +553,10 @@ footer b{font-family:var(--f-display);font-weight:900;letter-spacing:.1em;color:
         <button class="btn" type="submit">無料体験を申し込む</button>
         <p class="hint">送信されたお名前や連絡先は、体験のご案内にだけ使います。</p>
       </form>
+      <div class="done" id="apply-ok" hidden>
+        <h3>お申込みありがとうございます</h3>
+        <p><span class="p">内容を受け付けました。</span><span class="p">担当から</span><span class="p">ご連絡しますので、</span><span class="p">少しお待ちください。</span></p>
+      </div>
       <div class="done" id="apply-done" hidden>
         <h3>入力ありがとうございます</h3>
         <p><span class="p">ただいま</span><span class="p">申込みフォームの</span><span class="p">準備中です。</span><span class="p">お手数ですが、</span><span class="p">InstagramのDM</span><span class="p">（@egoamigo2026）で</span><span class="p">お申込みください。</span></p>
@@ -564,6 +577,7 @@ footer b{font-family:var(--f-display);font-weight:900;letter-spacing:.1em;color:
   var form = document.getElementById("apply-form");
   var err = document.getElementById("f-err");
   var done = document.getElementById("apply-done");
+  var ok = document.getElementById("apply-ok");
   form.addEventListener("submit", function(e){
     e.preventDefault();
     var miss = [];
@@ -575,6 +589,19 @@ footer b{font-family:var(--f-display);font-weight:900;letter-spacing:.1em;color:
     if(miss.length){ err.textContent = miss.join("・") + "を入力してください。"; return; }
     err.textContent = "";
     if(!ENDPOINT){ form.hidden = true; done.hidden = false; done.scrollIntoView({behavior:"smooth",block:"center"}); return; }
+    /* チームのスプレッドシートに送る（届いたら egoamigo7@gmail.com にメール） */
+    var fd = new URLSearchParams();
+    ["child","grade","exp","parent","tel","mail","note","website"].forEach(function(n){ fd.append(n, form[n] ? form[n].value.trim() : ""); });
+    var c = form.querySelector('input[name=course]:checked'); fd.append("course", c ? c.value : "");
+    fd.append("days", Array.prototype.map.call(form.querySelectorAll('input[name=days]:checked'), function(x){ return x.value; }).join("・"));
+    var btn = form.querySelector('button[type=submit],input[type=submit]');
+    if(btn){ btn.disabled = true; btn.dataset.t = btn.textContent; btn.textContent = "送信中…"; }
+    fetch(ENDPOINT, {method:"POST", mode:"no-cors", body:fd}).then(function(){
+      form.hidden = true; ok.hidden = false; ok.scrollIntoView({behavior:"smooth",block:"center"});
+    }).catch(function(){
+      err.textContent = "送れませんでした。時間をおいてもう一度送るか、InstagramのDMでお申込みください。";
+      if(btn){ btn.disabled = false; btn.textContent = btn.dataset.t; }
+    });
   });
 })();
 </script>
