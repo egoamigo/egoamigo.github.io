@@ -142,6 +142,33 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .fact .s{color:var(--mute);font-size:14px;margin-top:4px}
 @media (max-width:760px){.sched{grid-template-columns:1fr}}
 
+.places{margin:6px 0 0;display:grid;gap:8px}
+.places div{display:grid;grid-template-columns:32px 1fr;align-items:baseline;gap:10px}
+.places dt{font-weight:900;color:var(--night);background:var(--gold);border-radius:3px;text-align:center;font-size:14px;line-height:26px}
+.places dd{margin:0;font-weight:900;font-size:17px}
+.places small{display:block;font-weight:500;font-size:13px;color:var(--mute)}
+
+/* ===== fee ===== */
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,3vw,28px)}
+.plan{background:var(--panel);border:1px solid var(--gold-soft);border-radius:6px;padding:clamp(22px,3.5vw,32px)}
+.plan.team{border-color:var(--wine);background:linear-gradient(160deg,rgba(142,31,61,.28),var(--panel) 60%)}
+.plan .en{font-family:var(--f-display);font-weight:900;letter-spacing:.2em;color:var(--gold);font-size:15px}
+.plan h3{font-size:24px;font-weight:900;margin:2px 0 4px}
+.plan .for{color:var(--mute);font-size:14px;padding-bottom:14px;margin-bottom:10px;border-bottom:1px solid rgba(143,116,52,.45)}
+.price{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:6px 0}
+.price span{font-weight:700}
+.price b{font-family:var(--f-display);font-weight:900;font-size:clamp(36px,6vw,48px);line-height:1.1;letter-spacing:.02em}
+.price small{font-family:var(--f-body);font-size:14px;font-weight:700;margin-left:4px}
+.plan .pn{color:var(--mute);font-size:14px;margin-top:10px}
+.commons{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,3vw,28px);margin-top:clamp(16px,3vw,28px)}
+.commons div{border:1px solid rgba(169,163,154,.3);border-radius:6px;padding:16px 20px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.commons span{font-weight:700}
+.commons b{font-family:var(--f-display);font-weight:900;font-size:30px}
+.commons small{font-family:var(--f-body);font-size:13px;font-weight:700;margin-left:3px}
+.commons em{font-style:normal;color:var(--mute);font-size:13px;flex-basis:100%}
+.fee-note{color:var(--mute);font-size:14px;margin-top:18px}
+@media (max-width:760px){.plans,.commons{grid-template-columns:1fr}}
+
 /* ===== level ===== */
 .level{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,56px);align-items:center}
 .level img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px}
@@ -226,6 +253,7 @@ footer b{font-family:var(--f-display);font-weight:900;letter-spacing:.1em;color:
       <a href="#philosophy">大切にしていること</a>
       <a href="#training">トレーニング</a>
       <a href="#schedule">活動日・場所</a>
+      <a href="#fee">料金</a>
       <a href="#instagram">活動の様子</a>
     </nav>
     <a class="btn sm" href="#apply">無料体験の申込み</a>
@@ -331,11 +359,47 @@ footer b{font-family:var(--f-display);font-weight:900;letter-spacing:.1em;color:
         <div class="legend"><span><i class="dot"></i>サッカーの活動</span><span><i class="dot w"></i><span><span class="p">CORE FIELD様による</span><span class="p">フィジカルトレーニング</span></span></span></div>
       </div>
       <div class="facts">
-        <div class="fact"><div class="k">PLACE</div><div class="v"><span class="p">三木防災公園／</span><span class="p">明石周辺</span></div><div class="s"><span class="p">日によって</span><span class="p">場所が変わります。</span><span class="p">くわしくは</span><span class="p">お問い合わせください。</span></div></div>
+        <div class="fact"><div class="k">TIME</div><div class="v">18:00〜20:00</div><div class="s"><span class="p">月・火・木曜は、</span><span class="p">スクール生・チーム生とも</span><span class="p">この時間です。</span><span class="p">土日の試合・</span><span class="p">トレーニングマッチは</span><span class="p">その都度お知らせします。</span></div></div>
+        <div class="fact"><div class="k">PLACE</div>
+          <dl class="places">
+            <div><dt>月</dt><dd><span class="p">明石市 二見</span></dd></div>
+            <div><dt>火</dt><dd><span class="p">三木総合防災公園</span></dd></div>
+            <div><dt>木</dt><dd><span class="p">垂水健康公園</span><small><span class="p">チーム生の</span><span class="p">フィジカルトレーニング</span></small></dd></div>
+          </dl>
+        </div>
         <div class="fact"><div class="k">TEAM</div><div class="v"><span class="p">チーム生：</span><span class="p">5年生以下を募集</span></div><div class="s"><span class="p">やる気のある</span><span class="p">1・2年生も</span><span class="p">参加できます。</span></div></div>
-        <div class="fact"><div class="k">SCHOOL</div><div class="v">スクール生も募集中</div><div class="s"><span class="p">無料体験が</span><span class="p">できます。</span></div></div>
+        <div class="fact"><div class="k">SCHOOL</div><div class="v"><span class="p">スクール生：</span><span class="p">小学1〜6年生</span></div><div class="s"><span class="p">無料体験が</span><span class="p">できます。</span></div></div>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="band" id="fee" aria-labelledby="fee-h">
+  <div class="wrap">
+    <p class="eyebrow">Fee</p>
+    <h2 id="fee-h">料金</h2>
+    <div class="plans">
+      <div class="plan">
+        <p class="en">SCHOOL</p>
+        <h3>スクール生</h3>
+        <p class="for"><span class="p">小学1〜6年生｜</span><span class="p">月・火</span></p>
+        <div class="price"><span>週1回</span><b>7,000<small>円／月</small></b></div>
+        <div class="price"><span>週2回</span><b>13,000<small>円／月</small></b></div>
+        <p class="pn"><span class="p">月曜・火曜の</span><span class="p">どちらか、</span><span class="p">または両方を</span><span class="p">えらべます。</span></p>
+      </div>
+      <div class="plan team">
+        <p class="en">TEAM</p>
+        <h3>チーム生</h3>
+        <p class="for"><span class="p">月・火・木・土・日</span></p>
+        <div class="price"><span>月謝</span><b>15,000<small>円／月</small></b></div>
+        <p class="pn"><span class="p">木曜の</span><span class="p">CORE FIELD様による</span><span class="p">フィジカルトレーニング</span><span class="p">（約8,000円分）も、</span><span class="p">この中に</span><span class="p">ふくまれています。</span></p>
+      </div>
+    </div>
+    <div class="commons">
+      <div><span>入会金</span><b>10,000<small>円</small></b><em>スクール・チーム共通。入団のときに1回だけ。</em></div>
+      <div><span>保険代</span><b>1,000<small>円／年</small></b><em>スクール・チーム共通。スポーツ保険の費用です。</em></div>
+    </div>
+    <p class="fee-note"><span class="p">ユニフォーム代・</span><span class="p">大会参加費などは</span><span class="p">別にかかります。</span></p>
   </div>
 </section>
 
