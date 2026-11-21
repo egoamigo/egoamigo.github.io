@@ -64,4 +64,82 @@
     if(note){ if(notes.length){ phr(note, notes.map(function(r){return r["金額"]}).join("")); note.hidden=false; } else note.hidden=true; }
   }).catch(function(){});
 
+
+  /* ページの文（「ページの文」のタブ）
+     場所ごとに、文字のあるところへ上から1・2・3…と番号をつける。
+     スプシの「文」を書きかえると、そこの文字が変わる。空のときはそのまま。
+     改行はセルの中の改行、《 》でかこむと色の字になる。 */
+  var PLACES = [
+    ["メニュー", "header.top", "nav a, .btn"],
+    ["いちばん上", "#top", ".place, .hero-copy, .btn, .tag"],
+    ["ニュース", "section.news", "h2 small, h2, p"],
+    ["最新の活動", "#instagram", ".eyebrow, h2, .news-tabs button, .news-empty, .rec-more, .rec-foot"],
+    ["大切にしていること", "#philosophy", "p, h2, .values .k, .values .v"],
+    ["トレーニング", "#training", "p, h2, .en, h3"],
+    ["活動日と場所", "#schedule", ".eyebrow, h2, tbody th, .legend > span, .fact > .k, .fact > .v, .fact > .s, .places dt, .places dd, .places small"],
+    ["選手のレベル", "section[aria-labelledby=lv-h]", "p, h2"],
+    ["料金", "#fee", "h2"],
+    ["活動の様子", "#gallery", "p, h2, .btn"],
+    ["無料体験", "#apply", ".eyebrow, h2, .lead, .steps li > span, .field > label, .field > .lab, button[type=submit], .hint, #apply-ok h3, #apply-ok p"],
+    ["よくある質問", "#faq", "h2, dt, dd"],
+    ["いちばん下", "footer", "b, .wrap > span"]
+  ];
+  function removable(n){
+    if(n.nodeType===3) return true;
+    if(n.nodeType!==1 || n.hasAttribute("data-k")) return false;
+    if(n.tagName==="BR" || n.tagName==="EM") return true;
+    return n.tagName==="SPAN" && (!n.className || n.className==="p");
+  }
+  function readText(el){
+    var t="";
+    el.childNodes.forEach(function(n){
+      if(!removable(n)) return;
+      if(n.nodeType===3) t+=/\n/.test(n.nodeValue)? n.nodeValue.replace(/\s*\n\s*/g,"") : n.nodeValue;
+      else if(n.tagName==="BR") t+="\n";
+      else if(n.tagName==="EM") t+="《"+readText(n)+"》";
+      else t+=readText(n);
+    });
+    return t;
+  }
+  function writeText(el, text){
+    var frag=document.createDocumentFragment();
+    text.split(/\r?\n/).forEach(function(line, i){
+      if(i) frag.appendChild(document.createElement("br"));
+      line.split(/(《[^》]*》)/).forEach(function(seg){
+        if(!seg) return;
+        var box=frag;
+        if(/^《.*》$/.test(seg)){ box=document.createElement("em"); frag.appendChild(box); seg=seg.slice(1,-1); }
+        var tmp=document.createElement("span"); phr(tmp, seg);
+        while(tmp.firstChild) box.appendChild(tmp.firstChild);
+      });
+    });
+    var nodes=Array.prototype.filter.call(el.childNodes, removable);
+    var first=nodes[0]||null;
+    el.insertBefore(frag, first);
+    nodes.forEach(function(n){ el.removeChild(n); });
+  }
+  function mark(){
+    var out=[];
+    PLACES.forEach(function(pl){
+      var root=document.querySelector(pl[1]); if(!root) return;
+      var n=0;
+      root.querySelectorAll(pl[2]).forEach(function(el){
+        if(el.closest("#rec")) return;
+        n++; el.setAttribute("data-k", pl[0]+"-"+n);
+      });
+      root.querySelectorAll("[data-k^='"+pl[0]+"-']").forEach(function(el){
+        out.push([pl[0], el.getAttribute("data-k").split("-").pop(), readText(el).trim()]);
+      });
+    });
+    return out;
+  }
+  var marked = mark();
+  window.EgoSheet.texts = function(){ return marked; };
+  get("ページの文").then(function(rs){
+    rs.forEach(function(r){
+      var t=r["文"]; if(!t || !r["場所"] || !r["番号"]) return;
+      var el=document.querySelector('[data-k="'+r["場所"]+"-"+r["番号"]+'"]');
+      if(el && readText(el).trim()!==t) writeText(el, t);
+    });
+  }).catch(function(){});
 })();
