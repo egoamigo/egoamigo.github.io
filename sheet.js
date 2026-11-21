@@ -1,5 +1,5 @@
 /* ホームページの中身をスプレッドシートから読む
-   「EGO AMIGO ホームページの中身」のスプシを直すと、料金・コーチ・お知らせが変わる。
+   「EGO AMIGO ホームページの中身」のスプシを直すと、料金・お知らせが変わる。
    読めないときは、ページに書いてある中身をそのまま出す。 */
 (function(){
   var SHEET_ID = "1UPZjvL0F8K2yehmfyfCLYB2L29dIc7FQcFnmQsgUaTQ";
@@ -64,10 +64,4 @@
     if(note){ if(notes.length){ phr(note, notes.map(function(r){return r["金額"]}).join("")); note.hidden=false; } else note.hidden=true; }
   }).catch(function(){});
 
-  /* コーチ */
-  get("コーチ").then(function(rs){
-    var dl=lists()[1]; if(!dl || !rs.length) return;
-    dl.textContent="";
-    rs.forEach(function(r){ row(dl, r["役割"]||"コーチ", "", r["お名前"]||"（お名前・準備中）", r["ひとこと"]); });
-  }).catch(function(){});
 })();
