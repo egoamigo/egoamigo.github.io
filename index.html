@@ -595,8 +595,8 @@ footer b{font-family:var(--f-display);font-weight:900;letter-spacing:.1em;color:
 
 <script>
 (function(){
-  // 送信先：Googleフォームなどにつないだら、ここに送り先を入れる（空のあいだは「準備中」と案内する）
-  var ENDPOINT = "";
+  // 送信先：申込みのスプレッドシート（Apps Script のウェブアプリ）
+  var ENDPOINT = "https://script.google.com/macros/s/AKfycbyu8Cikyo618FGoQ0ygDxQB8hczegB86Wur2g7bK_ueg4qw7BnZMgKKz9QpKln1kBXL/exec";
   var form = document.getElementById("apply-form");
   var err = document.getElementById("f-err");
   var done = document.getElementById("apply-done");
